@@ -684,7 +684,7 @@
     function addStoryImage(input, hlIdx) {
       if (input.files && input.files[0]) {
         if (!siteData.highlights[hlIdx].stories) siteData.highlights[hlIdx].stories = [];
-        if (siteData.highlights[hlIdx].stories.length >= 10) {
+        if (siteData.highlights[hlIdx].stories.length >= 20) {
           alert('ใส่รูปในสตอรี่นี้ครบ 20 รูปแล้วค่ะ');
           return;
         }
