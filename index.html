@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Contact ♡ luvselris</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #fff9fb;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --pastel-pink: #ffd6e0;
+      --soft-pink: #ffeef2;
+      --border-soft: #fde8ee;
+      --text-main: #6b5358;
+      --text-muted: #a38c91;
+      --pink-title: #f2849e;
+      --glow-shadow: 0 10px 30px rgba(255, 214, 224, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Quicksand', 'Mitr', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #fff3f6 0%, #fff9fb 50%, #fff5f8 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Floating Emojis */
+    .floating-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .float-item {
+      position: absolute;
+      bottom: -60px;
+      font-size: 22px;
+      animation: floatUp 11s linear infinite;
+      opacity: 0.7;
+      filter: drop-shadow(0 2px 8px rgba(255, 214, 224, 0.4));
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      15% { opacity: 0.85; }
+      85% { opacity: 0.85; }
+      100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+    }
+
+    .container {
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Header Profile Card */
+    .header-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border-radius: 30px;
+      padding: 14px 14px 22px;
+      box-shadow: var(--glow-shadow);
+      border: 2px solid #ffffff;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .banner-img {
+      width: 100%;
+      height: 130px;
+      border-radius: 22px;
+      object-fit: cover;
+      margin-bottom: -46px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 4px 14px rgba(255, 214, 224, 0.3);
+      background: #fff0f3;
+    }
+
+    .profile-img {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #ffffff;
+      box-shadow: 0 6px 18px rgba(255, 214, 224, 0.4);
+      position: relative;
+      z-index: 2;
+      background: #ffffff;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--pink-title);
+      margin-top: 10px;
+      letter-spacing: 0.4px;
+    }
+
+    .page-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Contact Links Section */
+    .section-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border-radius: 26px;
+      padding: 20px 18px;
+      box-shadow: var(--glow-shadow);
+      border: 2px solid #ffffff;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contact-link-box {
+      background: #ffffff;
+      border: 1.5px solid var(--border-soft);
+      border-radius: 22px;
+      padding: 18px 18px;
+      box-shadow: 0 4px 14px rgba(255, 214, 224, 0.2);
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .contact-link-box:hover {
+      transform: translateY(-2px);
+      border-color: var(--pastel-pink);
+      box-shadow: 0 8px 20px rgba(255, 214, 224, 0.4);
+    }
+
+    .contact-link-box:active {
+      transform: scale(0.98);
+    }
+
+    .contact-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .contact-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--pink-title);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .contact-arrow {
+      font-size: 14px;
+      color: var(--pastel-pink);
+      transition: transform 0.2s;
+    }
+
+    .contact-link-box:hover .contact-arrow {
+      transform: translateX(4px);
+      color: var(--pink-title);
+    }
+
+    .contact-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding-top: 2px;
+    }
+
+    /* Back Button */
+    .back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 1.5px solid var(--border-soft);
+      border-radius: 20px;
+      padding: 12px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--pink-title);
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(255, 214, 224, 0.25);
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+      border-color: var(--pastel-pink);
+      transform: translateY(-1px);
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Emojis -->
+  <div class="floating-container" id="emojiContainer"></div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" loop autoplay playsinline src="https://files.catbox.moe/zy1wnq.mp3"></audio>
+
+  <div class="container">
+
+    <!-- Header Card -->
+    <div class="header-card">
+      <img src="https://i.postimg.cc/26YfhPc1/CA378830-D049-4F10-B91D-83E369F619D9.gif" alt="Banner" class="banner-img">
+      <img src="https://i.ibb.co/gZg1bdv9/IMG-3203.jpg" alt="Profile" class="profile-img">
+      
+      <h1 class="page-title">Contact Us ♡</h1>
+      <p class="page-sub">ช่องทางการติดต่อร้านค้า สามารถกดทักมาได้เลยนะคะ</p>
+    </div>
+
+    <!-- Contact List -->
+    <div class="section-card">
+      
+      <!-- 1. Line Officials ♡ -->
+      <a href="https://line.me/ti/p/caSKr8HbF6" target="_blank" class="contact-link-box">
+        <div class="contact-row-top">
+          <div class="contact-title">
+            <span>💬 Line officials ♡</span>
+          </div>
+          <span class="contact-arrow">➜</span>
+        </div>
+        <div class="contact-note">ช่องทางหลักสำหรับสอบถามและสั่งซื้อสินค้า</div>
+      </a>
+
+      <!-- 2. Line ส่วนตัว ♡ (พร้อมข้อความใต้กรอบตามสั่ง) -->
+      <a href="https://line.me/ti/p/caSKr8HbF6" target="_blank" class="contact-link-box">
+        <div class="contact-row-top">
+          <div class="contact-title">
+            <span>💌 Line ส่วนตัว ♡</span>
+          </div>
+          <span class="contact-arrow">➜</span>
+        </div>
+        <div class="contact-note">ทักมาซ้ำๆนะคะ ข้อความไม่ขึ้น</div>
+      </a>
+
+    </div>
+
+    <!-- ปุ่มย้อนกลับหน้าหลัก -->
+    <a href="index.html" class="back-btn">
+      <span>←</span> กลับหน้าหลัก
+    </a>
+
+    <div class="footer-note">thank you for supporting luvselris ♡</div>
+  </div>
+
+  <script>
+    // Audio Autoplay
+    const music = document.getElementById('bgMusic');
+    function startMusic() {
+      if (music.paused) music.play().catch(() => {});
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      startMusic();
+      document.body.addEventListener('click', startMusic, { once: true });
+      document.body.addEventListener('touchstart', startMusic, { once: true });
+    });
+
+    // Floating Emojis
+    const floatingIcons = ['🩹', '☁️', '🐰', '🤍', '👼🏻'];
+    const emojiBox = document.getElementById('emojiContainer');
+    function createEmoji() {
+      const el = document.createElement('div');
+      el.className = 'float-item';
+      el.textContent = floatingIcons[Math.floor(Math.random() * floatingIcons.length)];
+      el.style.left = Math.random() * 92 + 'vw';
+      el.style.animationDuration = (8 + Math.random() * 5) + 's';
+      emojiBox.appendChild(el);
+      setTimeout(() => { el.remove(); }, 14000);
+    }
+    setInterval(createEmoji, 1200);
+  </script>
+</body>
+</html>
