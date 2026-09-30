@@ -3,13 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Contact ♡ luvselris</title>
+  <title>luvselris ♡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <style>
     :root {
+      /* โทนขาวนมชมพู ละมุน ไม่เข้ม */
       --bg-color: #fff9fb;
       --card-bg: rgba(255, 255, 255, 0.95);
       --pastel-pink: #ffd6e0;
@@ -18,6 +23,7 @@
       --text-main: #6b5358;
       --text-muted: #a38c91;
       --pink-title: #f2849e;
+      --btn-pink: #f7a1b5;
       --glow-shadow: 0 10px 30px rgba(255, 214, 224, 0.45);
     }
 
@@ -73,12 +79,63 @@
       z-index: 2;
     }
 
+    /* Tab Navigation (แถบสลับหัวข้อ Home / Contact ด้านบน) */
+    .nav-tabs-box {
+      display: flex;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 5px;
+      border-radius: 25px;
+      border: 1.5px solid var(--border-soft);
+      box-shadow: 0 4px 16px rgba(255, 214, 224, 0.35);
+      margin-bottom: 16px;
+      gap: 6px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 10px 0;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #ffffff, var(--btn-pink));
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(247, 161, 181, 0.38);
+    }
+
+    /* Animation สำหรับการสลับเนื้อหา */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     /* Header Profile Card */
     .header-card {
       background: var(--card-bg);
       backdrop-filter: blur(14px);
       border-radius: 30px;
-      padding: 14px 14px 22px;
+      padding: 14px 14px 24px;
       box-shadow: var(--glow-shadow);
       border: 2px solid #ffffff;
       text-align: center;
@@ -87,7 +144,7 @@
 
     .banner-img {
       width: 100%;
-      height: 130px;
+      height: 145px;
       border-radius: 22px;
       object-fit: cover;
       margin-bottom: -46px;
@@ -97,8 +154,8 @@
     }
 
     .profile-img {
-      width: 88px;
-      height: 88px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       object-fit: cover;
       border: 4px solid #ffffff;
@@ -108,21 +165,24 @@
       background: #ffffff;
     }
 
-    .page-title {
-      font-size: 20px;
+    .store-name {
+      font-size: 22px;
       font-weight: 700;
       color: var(--pink-title);
       margin-top: 10px;
       letter-spacing: 0.4px;
     }
 
-    .page-sub {
+    .store-bio {
       font-size: 13px;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 6px;
+      line-height: 1.65;
+      white-space: pre-line;
+      padding: 0 10px;
     }
 
-    /* Contact Links Section */
+    /* Section Cards (ไม่มีกรอบเข้ม) */
     .section-card {
       background: var(--card-bg);
       backdrop-filter: blur(14px);
@@ -131,15 +191,193 @@
       box-shadow: var(--glow-shadow);
       border: 2px solid #ffffff;
       margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--pink-title);
+      margin-bottom: 16px;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    /* Highlights Section */
+    .highlights-container {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      padding: 4px 4px 8px;
+    }
+
+    .highlight-item {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .highlight-ring {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, #ffffff, var(--pastel-pink));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(255, 214, 224, 0.35);
+    }
+
+    .highlight-ring:hover {
+      transform: scale(1.05);
+    }
+
+    .highlight-thumb {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2.5px solid #ffffff;
+      background: #ffffff;
+    }
+
+    .highlight-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 8px;
+      text-align: center;
+      max-width: 85px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Reviews Section */
+    .reviews-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .review-bubble {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 13px 15px;
+      border: 1.5px solid var(--border-soft);
+      box-shadow: 0 3px 10px rgba(255, 214, 224, 0.15);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .review-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .review-stars {
+      font-size: 12.5px;
+      letter-spacing: 2px;
+    }
+
+    .review-desc {
+      font-size: 12.5px;
+      color: #7d656a;
+      margin-top: 5px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .review-time {
+      font-size: 10px;
+      color: #bfaab0;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .input-field, .textarea-field {
+      width: 100%;
+      padding: 11px 16px;
+      border: 1.5px solid var(--border-soft);
+      border-radius: 18px;
+      font-size: 13px;
+      background: #ffffff;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .input-field:focus, .textarea-field:focus {
+      border-color: var(--pastel-pink);
+      box-shadow: 0 0 0 3px rgba(255, 214, 224, 0.35);
+    }
+
+    .star-select-box {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .star-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      opacity: 0.25;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+
+    .star-btn.active {
+      opacity: 1;
+      transform: scale(1.12);
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #ffffff, var(--btn-pink));
+      color: #ffffff;
+      border: none;
+      padding: 11px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(247, 161, 181, 0.35);
+      transition: all 0.2s;
+    }
+
+    .submit-btn:hover {
+      opacity: 0.93;
+      transform: translateY(-1px);
+    }
+
+    /* Contact Links ในแท็บ Contact */
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .contact-link-box {
       background: #ffffff;
       border: 1.5px solid var(--border-soft);
-      border-radius: 22px;
+      border-radius: 20px;
       padding: 18px 18px;
       box-shadow: 0 4px 14px rgba(255, 214, 224, 0.2);
       text-decoration: none;
@@ -148,13 +386,12 @@
       flex-direction: column;
       gap: 6px;
       transition: all 0.2s ease;
-      cursor: pointer;
     }
 
     .contact-link-box:hover {
       transform: translateY(-2px);
       border-color: var(--pastel-pink);
-      box-shadow: 0 8px 20px rgba(255, 214, 224, 0.4);
+      box-shadow: 0 8px 20px rgba(255, 214, 224, 0.38);
     }
 
     .contact-link-box:active {
@@ -173,7 +410,7 @@
       color: var(--pink-title);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .contact-arrow {
@@ -190,31 +427,7 @@
     .contact-note {
       font-size: 12px;
       color: var(--text-muted);
-      line-height: 1.5;
-      padding-top: 2px;
-    }
-
-    /* Back Button */
-    .back-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      background: #ffffff;
-      border: 1.5px solid var(--border-soft);
-      border-radius: 20px;
-      padding: 12px;
-      font-size: 13.5px;
-      font-weight: 600;
-      color: var(--pink-title);
-      text-decoration: none;
-      box-shadow: 0 4px 14px rgba(255, 214, 224, 0.25);
-      transition: all 0.2s;
-    }
-
-    .back-btn:hover {
-      border-color: var(--pastel-pink);
-      transform: translateY(-1px);
+      line-height: 1.4;
     }
 
     .footer-note {
@@ -223,6 +436,134 @@
       color: var(--text-muted);
       margin-top: 24px;
     }
+
+    /* Story Viewer Modal */
+    .story-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(25, 20, 22, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .story-modal.active {
+      display: flex;
+    }
+
+    .story-card {
+      width: 100%;
+      max-width: 410px;
+      height: 88vh;
+      max-height: 780px;
+      position: relative;
+      background: #000000;
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .story-bars {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      gap: 4px;
+      z-index: 10;
+    }
+
+    .story-bar {
+      flex: 1;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .story-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: #ffffff;
+      transition: width 0.1s linear;
+    }
+
+    .story-header {
+      position: absolute;
+      top: 26px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+      color: #ffffff;
+    }
+
+    .story-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .story-header-thumb {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid #ffffff;
+      object-fit: cover;
+    }
+
+    .story-header-name {
+      font-size: 14px;
+      font-weight: 700;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .story-close-btn {
+      background: rgba(0, 0, 0, 0.4);
+      border: none;
+      color: #ffffff;
+      font-size: 20px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .story-image-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111111;
+    }
+
+    .story-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .story-tap-left, .story-tap-right {
+      position: absolute;
+      top: 60px;
+      bottom: 0;
+      width: 45%;
+      z-index: 5;
+      cursor: pointer;
+    }
+    .story-tap-left { left: 0; }
+    .story-tap-right { right: 0; }
   </style>
 </head>
 <body>
@@ -234,53 +575,432 @@
   <audio id="bgMusic" loop autoplay playsinline src="https://files.catbox.moe/zy1wnq.mp3"></audio>
 
   <div class="container">
-
-    <!-- Header Card -->
-    <div class="header-card">
-      <img src="https://i.postimg.cc/26YfhPc1/CA378830-D049-4F10-B91D-83E369F619D9.gif" alt="Banner" class="banner-img">
-      <img src="https://i.ibb.co/gZg1bdv9/IMG-3203.jpg" alt="Profile" class="profile-img">
-      
-      <h1 class="page-title">Contact Us ♡</h1>
-      <p class="page-sub">ช่องทางการติดต่อร้านค้า สามารถกดทักมาได้เลยนะคะ</p>
+    
+    <!-- Navigation Tabs: Home vs Contact -->
+    <div class="nav-tabs-box">
+      <button type="button" class="tab-btn active" id="tabHomeBtn" onclick="switchTab('home')">
+        <span>🏠 Home</span>
+      </button>
+      <button type="button" class="tab-btn" id="tabContactBtn" onclick="switchTab('contact')">
+        <span>💌 Contact</span>
+      </button>
     </div>
 
-    <!-- Contact List -->
-    <div class="section-card">
+    <!-- ========================================== -->
+    <!-- 1. แท็บ HOME (โปรไฟล์ + ไฮไลท์ + รีวิว) -->
+    <!-- ========================================== -->
+    <div id="homeTabContent" class="tab-content active">
       
-      <!-- 1. Line Officials ♡ -->
-      <a href="https://line.me/ti/p/caSKr8HbF6" target="_blank" class="contact-link-box">
-        <div class="contact-row-top">
-          <div class="contact-title">
-            <span>💬 Line officials ♡</span>
-          </div>
-          <span class="contact-arrow">➜</span>
-        </div>
-        <div class="contact-note">ช่องทางหลักสำหรับสอบถามและสั่งซื้อสินค้า</div>
-      </a>
+      <!-- Profile & Banner Header -->
+      <div class="header-card">
+        <img id="mainBanner" src="https://i.postimg.cc/26YfhPc1/CA378830-D049-4F10-B91D-83E369F619D9.gif" alt="Banner" class="banner-img">
+        <img id="mainProfile" src="https://i.ibb.co/gZg1bdv9/IMG-3203.jpg" alt="Profile" class="profile-img">
+        
+        <h1 class="store-name" id="mainStoreName">luvselris ♡</h1>
+        <p class="store-bio" id="mainStoreBio">ยินดีต้อนรับเข้าสู่ร้าน luvselris ♡
+สามารถกดดูไฮไลท์ที่เราลงไว้เพื่อดูตัวอย่างได้เลย ขอบคุณที่กดเข้ามานะคะ</p>
+      </div>
 
-      <!-- 2. Line ส่วนตัว ♡ (พร้อมข้อความใต้กรอบตามสั่ง) -->
-      <a href="https://line.me/ti/p/caSKr8HbF6" target="_blank" class="contact-link-box">
-        <div class="contact-row-top">
-          <div class="contact-title">
-            <span>💌 Line ส่วนตัว ♡</span>
-          </div>
-          <span class="contact-arrow">➜</span>
+      <!-- Highlights 3 อัน -->
+      <div class="section-card">
+        <div class="section-title">✨ Highlights ♡ (3 รายการ)</div>
+        <div class="highlights-container" id="highlightsList">
+          <!-- Render 3 Highlights -->
         </div>
-        <div class="contact-note">ทักมาซ้ำๆนะคะ ข้อความไม่ขึ้น</div>
-      </a>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="section-card">
+        <div class="section-title">💌 รีวิวทั้งหมดจากลูกค้า ♡</div>
+        
+        <div class="reviews-list" id="reviewsContainer">
+          <p style="text-align: center; color: var(--text-muted); font-size: 12.5px;">กำลังโหลดรีวิว...</p>
+        </div>
+
+        <div style="border-top: 1.5px dashed var(--border-soft); padding-top: 14px;">
+          <div class="star-select-box">
+            <button type="button" class="star-btn active" onclick="setStars(1)">⭐️</button>
+            <button type="button" class="star-btn active" onclick="setStars(2)">⭐️</button>
+            <button type="button" class="star-btn active" onclick="setStars(3)">⭐️</button>
+            <button type="button" class="star-btn active" onclick="setStars(4)">⭐️</button>
+            <button type="button" class="star-btn active" onclick="setStars(5)">⭐️</button>
+          </div>
+
+          <div class="form-group">
+            <input type="text" class="input-field" id="customerName" placeholder="สามารถกรอกชื่อตัวเองได้เลยนะคะ">
+          </div>
+
+          <div class="form-group">
+            <textarea class="textarea-field" id="customerFeedback" rows="3" placeholder="รีวิวร้านเค้าได้ตามความรู้สึกเลยนะคะ ♡"></textarea>
+          </div>
+
+          <button type="button" class="submit-btn" id="submitBtn" onclick="sendReview()">ส่งรีวิว ♡</button>
+        </div>
+      </div>
 
     </div>
 
-    <!-- ปุ่มย้อนกลับหน้าหลัก -->
-    <a href="index.html" class="back-btn">
-      <span>←</span> กลับหน้าหลัก
-    </a>
+    <!-- ========================================== -->
+    <!-- 2. แท็บ CONTACT (กล่องข้อความช่องทางการติดต่อ) -->
+    <!-- ========================================== -->
+    <div id="contactTabContent" class="tab-content">
+      
+      <!-- Mini Profile Header ในหน้า Contact -->
+      <div class="header-card" style="padding-bottom: 18px;">
+        <img id="contactBanner" src="https://i.postimg.cc/26YfhPc1/CA378830-D049-4F10-B91D-83E369F619D9.gif" alt="Banner" class="banner-img" style="height: 125px;">
+        <img id="contactProfile" src="https://i.ibb.co/gZg1bdv9/IMG-3203.jpg" alt="Profile" class="profile-img" style="width: 80px; height: 80px; margin-top: -40px;">
+        
+        <h2 class="store-name" style="font-size: 19px; margin-top: 8px;">Contact Us ♡</h2>
+        <p class="store-bio" style="font-size: 12.5px;">ช่องทางการติดต่อร้านค้า สามารถกดทักมาได้เลยนะคะ</p>
+      </div>
+
+      <!-- กล่องรายการติดต่อ -->
+      <div class="section-card">
+        <div class="section-title">💬 ช่องทางการติดต่อร้านค้า</div>
+        
+        <div class="contact-list">
+          <!-- 1. Line officials ♡ -->
+          <a id="c1Link" href="https://line.me/ti/p/caSKr8HbF6" target="_blank" class="contact-link-box">
+            <div class="contact-row-top">
+              <div class="contact-title">
+                <span id="c1TitleDisplay">💬 Line officials ♡</span>
+              </div>
+              <span class="contact-arrow">➜</span>
+            </div>
+            <div class="contact-note" id="c1NoteDisplay">ช่องทางหลักสำหรับสอบถามและสั่งซื้อสินค้า</div>
+          </a>
+
+          <!-- 2. Line ส่วนตัว ♡ -->
+          <a id="c2Link" href="https://line.me/ti/p/caSKr8HbF6" target="_blank" class="contact-link-box">
+            <div class="contact-row-top">
+              <div class="contact-title">
+                <span id="c2TitleDisplay">💌 Line ส่วนตัว ♡</span>
+              </div>
+              <span class="contact-arrow">➜</span>
+            </div>
+            <div class="contact-note" id="c2NoteDisplay">ทักมาซ้ำๆนะคะ ข้อความไม่ขึ้น</div>
+          </a>
+        </div>
+      </div>
+
+    </div>
 
     <div class="footer-note">thank you for supporting luvselris ♡</div>
   </div>
 
+  <!-- Story Viewer Modal -->
+  <div class="story-modal" id="storyModal">
+    <div class="story-card">
+      <div class="story-bars" id="storyBars"></div>
+      
+      <div class="story-header">
+        <div class="story-header-left">
+          <img id="storyHeaderThumb" class="story-header-thumb" src="">
+          <span id="storyHeaderName" class="story-header-name">Highlight</span>
+        </div>
+        <button class="story-close-btn" onclick="closeStory()">✕</button>
+      </div>
+
+      <div class="story-image-container">
+        <img id="storyImage" class="story-image" src="">
+        <div class="story-tap-left" onclick="prevStoryImage()"></div>
+        <div class="story-tap-right" onclick="nextStoryImage()"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Audio Autoplay
+    // สลับแท็บ Home และ Contact
+    function switchTab(tab) {
+      const homeContent = document.getElementById('homeTabContent');
+      const contactContent = document.getElementById('contactTabContent');
+      const homeBtn = document.getElementById('tabHomeBtn');
+      const contactBtn = document.getElementById('tabContactBtn');
+
+      if (tab === 'home') {
+        homeContent.classList.add('active');
+        contactContent.classList.remove('active');
+        homeBtn.classList.add('active');
+        contactBtn.classList.remove('active');
+      } else {
+        homeContent.classList.remove('active');
+        contactContent.classList.add('active');
+        homeBtn.classList.remove('active');
+        contactBtn.classList.add('active');
+      }
+    }
+
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCpAGDSy1NRgmLV_g7qJrCpwOhU9MrfQyY",
+      authDomain: "benefitie.firebaseapp.com",
+      projectId: "benefitie",
+      storageBucket: "benefitie.firebasestorage.app",
+      messagingSenderId: "270365672215",
+      appId: "1:270365672215:web:230d1491091e26ce83ed52"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+
+    let currentHighlights = [
+      {
+        title: "Review 1",
+        cover: "https://i.ibb.co/gZg1bdv9/IMG-3203.jpg",
+        stories: ["https://i.ibb.co/gZg1bdv9/IMG-3203.jpg"]
+      },
+      {
+        title: "Review 2",
+        cover: "https://i.ibb.co/gZg1bdv9/IMG-3203.jpg",
+        stories: ["https://i.ibb.co/gZg1bdv9/IMG-3203.jpg"]
+      },
+      {
+        title: "Review 3",
+        cover: "https://i.ibb.co/gZg1bdv9/IMG-3203.jpg",
+        stories: ["https://i.ibb.co/gZg1bdv9/IMG-3203.jpg"]
+      }
+    ];
+
+    function renderHighlights() {
+      const container = document.getElementById('highlightsList');
+      container.innerHTML = '';
+
+      currentHighlights.forEach((hl, index) => {
+        const item = document.createElement('div');
+        item.className = 'highlight-item';
+        item.onclick = () => openStory(index);
+        item.innerHTML = `
+          <div class="highlight-ring">
+            <img src="${hl.cover || 'https://i.ibb.co/gZg1bdv9/IMG-3203.jpg'}" class="highlight-thumb" alt="${hl.title}">
+          </div>
+          <div class="highlight-label">${hl.title || 'Highlight ' + (index + 1)}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Story Viewer
+    let activeHlIndex = 0;
+    let activeStoryIndex = 0;
+    let storyTimer = null;
+    const STORY_DURATION = 4500;
+
+    function openStory(hlIndex) {
+      activeHlIndex = hlIndex;
+      activeStoryIndex = 0;
+      const hl = currentHighlights[hlIndex];
+
+      if (!hl.stories || hl.stories.length === 0) {
+        alert('ไฮไลท์นี้ยังไม่มีรูปสตอรี่ค่ะ ♡');
+        return;
+      }
+
+      document.getElementById('storyHeaderThumb').src = hl.cover || hl.stories[0];
+      document.getElementById('storyHeaderName').textContent = hl.title || 'Highlight';
+
+      const barsBox = document.getElementById('storyBars');
+      barsBox.innerHTML = '';
+      hl.stories.forEach((_, idx) => {
+        const b = document.createElement('div');
+        b.className = 'story-bar';
+        b.innerHTML = `<div class="story-bar-fill" id="storyBar_${idx}"></div>`;
+        barsBox.appendChild(b);
+      });
+
+      document.getElementById('storyModal').classList.add('active');
+      showStorySlide();
+    }
+
+    function showStorySlide() {
+      clearTimeout(storyTimer);
+      const hl = currentHighlights[activeHlIndex];
+      const total = hl.stories.length;
+
+      if (activeStoryIndex >= total) {
+        closeStory();
+        return;
+      }
+
+      document.getElementById('storyImage').src = hl.stories[activeStoryIndex];
+
+      for (let i = 0; i < total; i++) {
+        const barFill = document.getElementById(`storyBar_${i}`);
+        if (!barFill) continue;
+        if (i < activeStoryIndex) {
+          barFill.style.width = '100%';
+        } else if (i === activeStoryIndex) {
+          barFill.style.width = '100%';
+          barFill.style.transition = `width ${STORY_DURATION}ms linear`;
+        } else {
+          barFill.style.width = '0%';
+          barFill.style.transition = 'none';
+        }
+      }
+
+      storyTimer = setTimeout(() => {
+        nextStoryImage();
+      }, STORY_DURATION);
+    }
+
+    function nextStoryImage() {
+      const hl = currentHighlights[activeHlIndex];
+      if (activeStoryIndex < hl.stories.length - 1) {
+        activeStoryIndex++;
+        showStorySlide();
+      } else {
+        closeStory();
+      }
+    }
+
+    function prevStoryImage() {
+      if (activeStoryIndex > 0) {
+        activeStoryIndex--;
+        showStorySlide();
+      }
+    }
+
+    function closeStory() {
+      clearTimeout(storyTimer);
+      document.getElementById('storyModal').classList.remove('active');
+    }
+
+    // Sync Data
+    function applySiteData(data) {
+      if (!data) return;
+      if (data.banner) {
+        document.getElementById('mainBanner').src = data.banner;
+        document.getElementById('contactBanner').src = data.banner;
+      }
+      if (data.profile) {
+        document.getElementById('mainProfile').src = data.profile;
+        document.getElementById('contactProfile').src = data.profile;
+      }
+      if (data.storeName) document.getElementById('mainStoreName').textContent = data.storeName;
+      if (data.storeBio) document.getElementById('mainStoreBio').textContent = data.storeBio;
+
+      if (data.musicUrl) {
+        const music = document.getElementById('bgMusic');
+        if (music && music.src !== data.musicUrl) {
+          music.src = data.musicUrl;
+          music.play().catch(() => {});
+        }
+      }
+
+      if (data.highlights && Array.isArray(data.highlights)) {
+        currentHighlights = data.highlights;
+        renderHighlights();
+      }
+
+      // ซิงก์ข้อมูลแท็บ Contact
+      if (data.contact) {
+        const c = data.contact;
+        if (c.c1Title) document.getElementById('c1TitleDisplay').textContent = c.c1Title;
+        if (c.c1Url) document.getElementById('c1Link').href = c.c1Url;
+        if (c.c1Note) document.getElementById('c1NoteDisplay').textContent = c.c1Note;
+
+        if (c.c2Title) document.getElementById('c2TitleDisplay').textContent = c.c2Title;
+        if (c.c2Url) document.getElementById('c2Link').href = c.c2Url;
+        if (c.c2Note) document.getElementById('c2NoteDisplay').textContent = c.c2Note;
+      }
+    }
+
+    try {
+      const cached = localStorage.getItem('luv_gh_cached_data');
+      if (cached) applySiteData(JSON.parse(cached));
+    } catch (e) {}
+
+    db.collection("luvselris_site").doc("highlight_content").onSnapshot(doc => {
+      if (doc.exists) {
+        const live = doc.data();
+        localStorage.setItem('luv_gh_cached_data', JSON.stringify(live));
+        applySiteData(live);
+      } else {
+        renderHighlights();
+      }
+    });
+
+    // Reviews System
+    let currentRating = 5;
+    function setStars(star) {
+      currentRating = star;
+      const btns = document.querySelectorAll('.star-btn');
+      btns.forEach((btn, idx) => {
+        if (idx < star) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+    }
+
+    function listenReviews() {
+      db.collection("luvselris_reviews")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(snapshot => {
+          const container = document.getElementById('reviewsContainer');
+          if (snapshot.empty) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 12.5px;">ยังไม่มีรีวิว มารีวิวเป็นคนแรกได้เลยนะคะ 🤍</p>';
+            return;
+          }
+
+          let html = '';
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            html += `
+              <div class="review-bubble">
+                <div class="review-header">
+                  <span class="review-name">${data.name}</span>
+                  <span class="review-stars">${'⭐️'.repeat(data.stars || 5)}</span>
+                </div>
+                <div class="review-desc">${data.feedback}</div>
+                <div class="review-time">${data.dateStr || 'เมื่อเร็วๆ นี้'}</div>
+              </div>
+            `;
+          });
+          container.innerHTML = html;
+        });
+    }
+
+    async function sendReview() {
+      const nameInput = document.getElementById('customerName');
+      const feedbackInput = document.getElementById('customerFeedback');
+      const submitBtn = document.getElementById('submitBtn');
+
+      const name = nameInput.value.trim();
+      const feedback = feedbackInput.value.trim();
+
+      if (!name || !feedback) {
+        alert('กรุณากรอกชื่อและข้อความรีวิวก่อนส่งนะคะ ♡');
+        return;
+      }
+
+      submitBtn.disabled = true;
+
+      try {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+
+        await db.collection("luvselris_reviews").add({
+          name: name,
+          stars: currentRating,
+          feedback: feedback,
+          dateStr: dateStr,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        nameInput.value = '';
+        feedbackInput.value = '';
+        setStars(5);
+        alert('ขอบคุณสำหรับรีวิวนะคะ ♡');
+      } catch (err) {
+        alert('ส่งรีวิวไม่สำเร็จ ลองใหม่อีกครั้งนะคะ');
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    listenReviews();
+
+    // Background Audio
     const music = document.getElementById('bgMusic');
     function startMusic() {
       if (music.paused) music.play().catch(() => {});
