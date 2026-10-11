@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>luniecha ♡</title>
 
-  <!-- Meta Tags สำหรับแชร์ลิงก์ใน LINE / โซเชียล -->
+  <!-- Meta Tags สำหรับพรีวิวใน LINE / โซเชียล -->
   <meta property="og:title" content="luniecha ♡">
   <meta property="og:description" content="ยินดีต้อนรับเข้าสู่ร้าน luniecha ♡ สามารถกดดูไฮไลท์ที่เราลงไว้เพื่อดูตัวอย่างได้เลย ขอบคุณที่กดเข้ามานะคะ">
   <meta property="og:url" content="https://luniecha.netlify.app">
@@ -21,16 +21,12 @@
 
   <style>
     :root {
+      /* คุมโทนชมพู-ขาว ละมุนเดิม 100% */
       --bg-pink: #fff0f3;
       --card-white: rgba(255, 255, 255, 0.96);
       --deep-pink: #fb6f92;
       --border-pink: #ffc2d1;
-      
-      /* โทนเขียวมิ้นต์สำหรับแถบเมนูด้านบน */
-      --mint-bg: #e6f9f4;
-      --mint-border: #a8ebd9;
-      --mint-text: #1d6e5d;
-      
+      --tab-bg: #ffe5ec;
       --text-dark: #4a3e3d;
       --text-muted: #8e7c7e;
       --shadow-soft: 0 10px 30px rgba(251, 111, 146, 0.18);
@@ -85,17 +81,17 @@
       z-index: 2;
     }
 
-    /* เมนูบาร์ด้านบน 2 แท็บ: Home และ contact เท่านั้น */
+    /* เมนูบาร์ด้านบน โทนชมพู-ขาว (2 แท็บ: Home และ contact) */
     .top-navbar {
-      background: var(--mint-bg);
-      border: 1.5px solid var(--mint-border);
+      background: var(--tab-bg);
+      border: 1.5px solid var(--border-pink);
       border-radius: 26px;
       padding: 5px 6px;
       display: flex;
       align-items: center;
       gap: 6px;
       margin-bottom: 18px;
-      box-shadow: 0 4px 16px rgba(168, 235, 217, 0.35);
+      box-shadow: 0 4px 16px rgba(251, 111, 146, 0.15);
     }
 
     .nav-tab-btn {
@@ -105,7 +101,7 @@
       background: none;
       font-size: 14px;
       font-weight: 600;
-      color: var(--mint-text);
+      color: var(--deep-pink);
       border-radius: 20px;
       cursor: pointer;
       text-align: center;
@@ -115,11 +111,11 @@
 
     .nav-tab-btn.active {
       background: #ffffff;
-      color: var(--mint-text);
+      color: var(--deep-pink);
       font-weight: 700;
       opacity: 1;
-      box-shadow: 0 3px 10px rgba(29, 110, 93, 0.15);
-      border: 1px solid var(--mint-border);
+      box-shadow: 0 3px 10px rgba(251, 111, 146, 0.2);
+      border: 1px solid var(--border-pink);
     }
 
     .tab-section { display: none; }
@@ -340,7 +336,7 @@
       gap: 8px;
     }
 
-    /* กล่อง Contact 2 กล่อง */
+    /* กล่อง Contact 2 กล่อง โทนชมพู-ขาว */
     .contact-box-link {
       display: flex;
       flex-direction: column;
@@ -634,7 +630,7 @@
 
   <div class="container">
 
-    <!-- เมนูด้านบน 2 แท็บ (Home และ contact) -->
+    <!-- เมนูด้านบน 2 แท็บ (Home และ contact โทนชมพู-ขาว) -->
     <div class="top-navbar">
       <button type="button" class="nav-tab-btn active" onclick="switchTab('home', this)">Home</button>
       <button type="button" class="nav-tab-btn" onclick="switchTab('contact', this)">contact</button>
@@ -670,7 +666,7 @@
       </div>
     </div>
 
-    <!-- 2. แท็บ Contact (2 กล่องตามบรีฟเป๊ะๆ) -->
+    <!-- 2. แท็บ Contact (2 กล่องเป๊ะๆ โทนชมพู-ขาว) -->
     <div class="tab-section" id="tab-contact">
       
       <!-- กล่อง line officials -->
@@ -739,6 +735,7 @@
   </div>
 
   <script>
+    // ฐานข้อมูลเดิม เชื่อมต่อข้อมูลและรีวิวเดิมทั้งหมด
     const DB_SITE = "jianing_site_data";
     const DB_HL = "jianing_site_highlights";
     const DB_REVIEWS = "jianing_site_reviews";
@@ -809,6 +806,7 @@
       }
     });
 
+    // ดึงไฮไลท์แบบ Sub-collection ภาพ HD
     db.collection(DB_HL).orderBy("order", "asc").onSnapshot(async snap => {
       highlightsData = [];
       for (const doc of snap.docs) {
