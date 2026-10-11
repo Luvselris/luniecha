@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>luniecha ♡</title>
 
-  <!-- Meta Tags สำหรับพรีวิวใน LINE & โซเชียล -->
+  <!-- Open Graph สำหรับ LINE Preview -->
   <meta property="og:title" content="luniecha ♡">
   <meta property="og:description" content="ยินดีต้อนรับเข้าสู่ร้าน luniecha ♡ ร้านเราเปิด 24 ชั่วโมง พร้อมตอบตลอดนะคะ">
   <meta property="og:url" content="https://luniecha.netlify.app">
@@ -45,7 +45,7 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 18px 14px 60px;
+      padding: 16px 14px 60px;
       position: relative;
     }
 
@@ -164,7 +164,7 @@
       padding: 0 10px;
     }
 
-    /* 2. การ์ดไฮไลท์ */
+    /* 2. การ์ดไฮไลท์ & รีวิว */
     .card-box {
       background: var(--card-white);
       border-radius: 28px;
@@ -256,8 +256,7 @@
     }
 
     .rev-stars {
-      color: #ffb703;
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 2px;
     }
 
@@ -293,12 +292,14 @@
       border: none;
       font-size: 26px;
       cursor: pointer;
-      color: #ffd6df;
-      transition: transform 0.15s;
+      opacity: 0.35;
+      filter: grayscale(100%);
+      transition: transform 0.15s, opacity 0.15s, filter 0.15s;
     }
 
     .star-btn.active {
-      color: #ffb703;
+      opacity: 1;
+      filter: grayscale(0%);
       transform: scale(1.1);
     }
 
@@ -482,7 +483,7 @@
       <button type="button" class="nav-tab-btn" id="btn-contact" onclick="switchPage('contact')">contact</button>
     </div>
 
-    <!-- 1. แท็บ Home (ร้าน luniecha) -->
+    <!-- 1. แท็บ Home (หน้าเดิมของ luniecha) -->
     <div class="tab-section active" id="sec-home">
       
       <!-- การ์ดโปรไฟล์ร้าน luniecha -->
@@ -517,13 +518,13 @@ Instagram Stk สอบถามได้ค่ะ</p>
 
         <div class="review-form-divider"></div>
 
-        <!-- ตัวเลือกดาว -->
+        <!-- ตัวเลือกดาวอีโมจิ 3D -->
         <div class="form-stars-select">
-          <button type="button" class="star-btn active" onclick="chooseStar(1)">★</button>
-          <button type="button" class="star-btn active" onclick="chooseStar(2)">★</button>
-          <button type="button" class="star-btn active" onclick="chooseStar(3)">★</button>
-          <button type="button" class="star-btn active" onclick="chooseStar(4)">★</button>
-          <button type="button" class="star-btn active" onclick="chooseStar(5)">★</button>
+          <button type="button" class="star-btn active" onclick="chooseStar(1)">⭐</button>
+          <button type="button" class="star-btn active" onclick="chooseStar(2)">⭐</button>
+          <button type="button" class="star-btn active" onclick="chooseStar(3)">⭐</button>
+          <button type="button" class="star-btn active" onclick="chooseStar(4)">⭐</button>
+          <button type="button" class="star-btn active" onclick="chooseStar(5)">⭐</button>
         </div>
 
         <!-- ช่องกรอกชื่อ -->
@@ -573,10 +574,10 @@ Instagram Stk สอบถามได้ค่ะ</p>
   </div>
 
   <script>
-    // แยก Collection เฉพาะของร้าน luniecha เท่านั้น
-    const DB_SITE = "luniecha_site_data";
-    const DB_HL = "luniecha_site_highlights";
-    const DB_REVIEWS = "luniecha_site_reviews";
+    // ชี้กลับมาที่ฐานข้อมูลจริงตัวเดิมของโปรเจกต์ (ดึงรีวิวเดิมทั้งหมดกลับมา 100%)
+    const DB_SITE = "jianing_site_data";
+    const DB_HL = "jianing_site_highlights";
+    const DB_REVIEWS = "jianing_site_reviews";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCpAGDSy1NRgmLV_g7qJrCpwOhU9MrfQyY",
@@ -619,33 +620,30 @@ Instagram Stk สอบถามได้ค่ะ</p>
       }
     }
 
-    // 1. ดึงข้อมูลร้าน luniecha
+    // 1. ข้อมูลร้านค้า (ล็อคข้อมูล luniecha ตามรูปจริงไว้เป็นค่าหลัก)
+    const DEFAULT_BANNER = "https://files.catbox.moe/k20739.png";
+    const DEFAULT_PROFILE = "https://files.catbox.moe/k20739.png";
+
     function applySiteData(d) {
-      if (!d) return;
-      if (d.banner) document.getElementById('storeBanner').src = d.banner;
-      if (d.profile) document.getElementById('storeProfile').src = d.profile;
-      if (d.storeName) document.getElementById('storeNameText').textContent = d.storeName;
-      if (d.storeBio) document.getElementById('storeBioText').textContent = d.storeBio;
-      if (d.musicUrl && music.src !== d.musicUrl) {
+      document.getElementById('storeBanner').src = (d && d.banner) ? d.banner : "https://files.catbox.moe/2h4683.jpeg";
+      document.getElementById('storeProfile').src = (d && d.profile) ? d.profile : "https://files.catbox.moe/2h4683.jpeg";
+      document.getElementById('storeNameText').textContent = "luniecha ♡";
+      document.getElementById('storeBioText').textContent = (d && d.storeBio) ? d.storeBio : `ยินดีต้อนรับเข้าสู่ร้าน luniecha ♡\nร้านเราเปิด 24 ชั่วโมง พร้อมตอบตลอดนะคะ\nAppre Netflix YouTube\nInstagram Stk สอบถามได้ค่ะ`;
+      if (d && d.musicUrl && music.src !== d.musicUrl) {
         music.src = d.musicUrl;
         playMusic();
       }
     }
 
-    try {
-      const cached = localStorage.getItem('luniecha_cached_data');
-      if (cached) applySiteData(JSON.parse(cached));
-    } catch (e) {}
-
     db.collection(DB_SITE).doc("content").onSnapshot(doc => {
       if (doc.exists) {
-        const d = doc.data();
-        localStorage.setItem('luniecha_cached_data', JSON.stringify(d));
-        applySiteData(d);
+        applySiteData(doc.data());
+      } else {
+        applySiteData(null);
       }
     });
 
-    // 2. ดึงไฮไลท์ luniecha
+    // 2. ดึงไฮไลท์เดิม (รองรับทั้ง slides และ images ก้อนเดิม)
     let highlightsData = [];
     db.collection(DB_HL).orderBy("order", "asc").onSnapshot(async snap => {
       highlightsData = [];
@@ -744,7 +742,7 @@ Instagram Stk สอบถามได้ค่ะ</p>
     document.getElementById('storyTapRight').onclick = nextStorySlide;
     document.getElementById('storyTapLeft').onclick = prevStorySlide;
 
-    // 3. ระบบรีวิว luniecha
+    // 3. ระบบรีวิวและดาวอีโมจิ 3D (⭐)
     let selectedRating = 5;
     function chooseStar(star) {
       selectedRating = star;
@@ -791,7 +789,7 @@ Instagram Stk สอบถามได้ค่ะ</p>
       }
     }
 
-    // ดึงรีวิวของร้าน luniecha
+    // ดึงรีวิวเดิมทั้งหมดกลับมา (แสดงเป็นอีโมจิ ⭐ 3D)
     db.collection(DB_REVIEWS).orderBy("createdAt", "desc").onSnapshot(snapshot => {
       const container = document.getElementById('reviewsContainer');
       if (snapshot.empty) {
@@ -805,7 +803,7 @@ Instagram Stk สอบถามได้ค่ะ</p>
           <div class="review-bubble">
             <div class="rev-head">
               <span class="rev-name">${r.name}</span>
-              <span class="rev-stars">${'★'.repeat(r.stars || 5)}</span>
+              <span class="rev-stars">${'⭐'.repeat(r.stars || 5)}</span>
             </div>
             <div class="rev-text">${r.feedback}</div>
             <div class="rev-date">${r.dateStr || ''}</div>
