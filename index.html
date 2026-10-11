@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>luniecha ♡</title>
 
-  <!-- Open Graph สำหรับ LINE Preview -->
+  <!-- Meta Tags สำหรับพรีวิวใน LINE & โซเชียล -->
   <meta property="og:title" content="luniecha ♡">
   <meta property="og:description" content="ยินดีต้อนรับเข้าสู่ร้าน luniecha ♡ ร้านเราเปิด 24 ชั่วโมง พร้อมตอบตลอดนะคะ">
   <meta property="og:url" content="https://luniecha.netlify.app">
@@ -482,10 +482,10 @@
       <button type="button" class="nav-tab-btn" id="btn-contact" onclick="switchPage('contact')">contact</button>
     </div>
 
-    <!-- 1. แท็บ Home (หน้าเดียวเรียงลงมาตามรูปภาพเป๊ะๆ) -->
+    <!-- 1. แท็บ Home (ร้าน luniecha) -->
     <div class="tab-section active" id="sec-home">
       
-      <!-- การ์ดโปรไฟล์ร้าน -->
+      <!-- การ์ดโปรไฟล์ร้าน luniecha -->
       <div class="store-card">
         <div class="banner-wrap">
           <img id="storeBanner" src="" alt="Banner">
@@ -502,15 +502,15 @@ Instagram Stk สอบถามได้ค่ะ</p>
 
       <!-- การ์ดไฮไลท์ -->
       <div class="card-box">
-        <div class="box-title" id="hlBoxTitle">highlights♡ (0 รายการ)</div>
+        <div class="box-title" id="hlBoxTitle">highlights♡ (3 รายการ)</div>
         <div class="highlights-wrap" id="highlightsList"></div>
       </div>
 
-      <!-- การ์ดรีวิว + ฟอร์มเขียนรีวิวด้านล่าง -->
+      <!-- การ์ดรีวิว review luniecha ♡ -->
       <div class="card-box">
         <div class="box-title">review luniecha ♡</div>
 
-        <!-- รายการรีวิวที่ลูกค้าส่งเข้ามา -->
+        <!-- รายการรีวิว -->
         <div class="reviews-list" id="reviewsContainer">
           <p style="text-align:center; color:#b09ba0; font-size:12.5px;">กำลังโหลดรีวิว...</p>
         </div>
@@ -540,7 +540,7 @@ Instagram Stk สอบถามได้ค่ะ</p>
 
     </div>
 
-    <!-- 2. แท็บ contact (2 กล่องติดต่อ LINE) -->
+    <!-- 2. แท็บ contact -->
     <div class="tab-section" id="sec-contact">
       
       <!-- กล่อง line officials -->
@@ -558,7 +558,7 @@ Instagram Stk สอบถามได้ค่ะ</p>
 
   </div>
 
-  <!-- Story Modal ดูรูปไฮไลท์แบบเต็มจอ -->
+  <!-- Story Modal ดูรูปไฮไลท์ -->
   <div class="story-modal" id="storyModal">
     <div class="story-bars" id="storyBars"></div>
     <div class="story-header">
@@ -573,10 +573,10 @@ Instagram Stk สอบถามได้ค่ะ</p>
   </div>
 
   <script>
-    // เชื่อมต่อฐานข้อมูลเดิม
-    const DB_SITE = "jianing_site_data";
-    const DB_HL = "jianing_site_highlights";
-    const DB_REVIEWS = "jianing_site_reviews";
+    // แยก Collection เฉพาะของร้าน luniecha เท่านั้น
+    const DB_SITE = "luniecha_site_data";
+    const DB_HL = "luniecha_site_highlights";
+    const DB_REVIEWS = "luniecha_site_reviews";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCpAGDSy1NRgmLV_g7qJrCpwOhU9MrfQyY",
@@ -603,7 +603,7 @@ Instagram Stk สอบถามได้ค่ะ</p>
       }, { passive: true });
     });
 
-    // ฟังก์ชันสลับแท็บ Home / contact
+    // สลับแท็บ Home / contact
     function switchPage(page) {
       document.getElementById('btn-home').classList.remove('active');
       document.getElementById('btn-contact').classList.remove('active');
@@ -619,7 +619,7 @@ Instagram Stk สอบถามได้ค่ะ</p>
       }
     }
 
-    // 1. ดึงข้อมูลร้าน
+    // 1. ดึงข้อมูลร้าน luniecha
     function applySiteData(d) {
       if (!d) return;
       if (d.banner) document.getElementById('storeBanner').src = d.banner;
@@ -633,19 +633,19 @@ Instagram Stk สอบถามได้ค่ะ</p>
     }
 
     try {
-      const cached = localStorage.getItem('jianing_cached_data');
+      const cached = localStorage.getItem('luniecha_cached_data');
       if (cached) applySiteData(JSON.parse(cached));
     } catch (e) {}
 
     db.collection(DB_SITE).doc("content").onSnapshot(doc => {
       if (doc.exists) {
         const d = doc.data();
-        localStorage.setItem('jianing_cached_data', JSON.stringify(d));
+        localStorage.setItem('luniecha_cached_data', JSON.stringify(d));
         applySiteData(d);
       }
     });
 
-    // 2. ดึงไฮไลท์
+    // 2. ดึงไฮไลท์ luniecha
     let highlightsData = [];
     db.collection(DB_HL).orderBy("order", "asc").onSnapshot(async snap => {
       highlightsData = [];
@@ -744,7 +744,7 @@ Instagram Stk สอบถามได้ค่ะ</p>
     document.getElementById('storyTapRight').onclick = nextStorySlide;
     document.getElementById('storyTapLeft').onclick = prevStorySlide;
 
-    // 3. ระบบรีวิว & ส่งรีวิวแบบในหน้าจอ
+    // 3. ระบบรีวิว luniecha
     let selectedRating = 5;
     function chooseStar(star) {
       selectedRating = star;
@@ -791,7 +791,7 @@ Instagram Stk สอบถามได้ค่ะ</p>
       }
     }
 
-    // ดึงรีวิวเดิมมาแสดง
+    // ดึงรีวิวของร้าน luniecha
     db.collection(DB_REVIEWS).orderBy("createdAt", "desc").onSnapshot(snapshot => {
       const container = document.getElementById('reviewsContainer');
       if (snapshot.empty) {
