@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>luniecha ♡</title>
+
+  <!-- Open Graph สำหรับพรีวิวใน LINE & โซเชียล -->
+  <meta property="og:title" content="luniecha ♡">
+  <meta property="og:description" content="ยินดีต้อนรับเข้าสู่ร้าน luniecha ♡ ร้านเราเปิด 24 ชั่วโมง พร้อมตอบตลอดนะคะ Netflix YouTube Instagram สอบถามได้ค่ะ">
+  <meta property="og:url" content="https://luniecha.netlify.app">
+  <meta property="og:type" content="website">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
@@ -72,9 +79,53 @@
     .container {
       max-width: 480px;
       margin: 0 auto;
-      padding: 24px 16px 80px;
+      padding: 16px 16px 80px;
       position: relative;
       z-index: 2;
+    }
+
+    /* แถบสลับเมนูด้านบนสุด (Home / contact) */
+    .top-navbar {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid var(--border-pink);
+      border-radius: 30px;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 14px rgba(251, 111, 146, 0.12);
+    }
+
+    .nav-tab-btn {
+      flex: 1;
+      padding: 8px 0;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 500;
+      color: #df7b85;
+      border-radius: 24px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .nav-tab-btn.active {
+      background: #ffffff;
+      color: var(--deep-pink);
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(251, 111, 146, 0.2);
+      border: 1px solid #ffe3e9;
+    }
+
+    .tab-section {
+      display: none;
+      width: 100%;
+    }
+
+    .tab-section.active {
+      display: block;
     }
 
     /* Header Profile Card */
@@ -440,6 +491,41 @@
       transform: translateY(-1px);
     }
 
+    /* กล่องหน้า Contact */
+    .contact-card-link {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid var(--border-pink);
+      border-radius: 24px;
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: var(--glow-shadow);
+      text-align: center;
+      margin-bottom: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    .contact-card-link:active {
+      transform: scale(0.97);
+    }
+
+    .contact-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--deep-pink);
+    }
+
+    .contact-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
     .footer-note {
       text-align: center;
       font-size: 12px;
@@ -458,55 +544,83 @@
 
   <div class="container">
     
-    <!-- Profile & Banner Header -->
-    <div class="header-card">
-      <img id="mainBanner" src="https://i.postimg.cc/26YfhPc1/CA378830-D049-4F10-B91D-83E369F619D9.gif" alt="Banner" class="banner-img">
-      <img id="mainProfile" src="https://i.ibb.co/gZg1bdv9/IMG-3203.jpg" alt="Profile" class="profile-img">
+    <!-- เมนูด้านบน 2 แท็บ (Home / contact) -->
+    <div class="top-navbar">
+      <button type="button" class="nav-tab-btn active" id="btn-home" onclick="switchPage('home')">Home</button>
+      <button type="button" class="nav-tab-btn" id="btn-contact" onclick="switchPage('contact')">contact</button>
+    </div>
+
+    <!-- 1. แท็บ Home -->
+    <div class="tab-section active" id="sec-home">
       
-      <h1 class="store-name" id="mainStoreName">luniecha ♡</h1>
-      <p class="store-bio" id="mainStoreBio">ยินดีต้อนรับเข้าสู่ร้าน luniecha ♡
+      <!-- Profile & Banner Header -->
+      <div class="header-card">
+        <img id="mainBanner" src="https://i.postimg.cc/26YfhPc1/CA378830-D049-4F10-B91D-83E369F619D9.gif" alt="Banner" class="banner-img">
+        <img id="mainProfile" src="https://i.ibb.co/gZg1bdv9/IMG-3203.jpg" alt="Profile" class="profile-img">
+        
+        <h1 class="store-name" id="mainStoreName">luniecha ♡</h1>
+        <p class="store-bio" id="mainStoreBio">ยินดีต้อนรับเข้าสู่ร้าน luniecha ♡
 ร้านเราเปิด 24 ชั่วโมง พร้อมตอบตลอดนะคะ
 Netflix YouTube Instagram สอบถามได้ค่ะ</p>
-    </div>
-
-    <!-- Highlights 3 อัน -->
-    <div class="section-card">
-      <div class="section-title">highlights♡ (3 รายการ)</div>
-      <div class="highlights-container" id="highlightsList">
-        <!-- Render Highlights -->
       </div>
+
+      <!-- Highlights 3 อัน -->
+      <div class="section-card">
+        <div class="section-title">highlights♡ (3 รายการ)</div>
+        <div class="highlights-container" id="highlightsList">
+          <!-- Render Highlights -->
+        </div>
+      </div>
+
+      <!-- Review Section -->
+      <div class="section-card">
+        <div class="section-title">review luniecha ♡</div>
+        
+        <div class="reviews-list" id="reviewsContainer">
+          <p style="text-align: center; color: var(--text-muted); font-size: 13px;">กำลังโหลดรีวิว...</p>
+        </div>
+
+        <div style="border-top: 1.5px dashed var(--border-pink); padding-top: 16px;">
+          <div class="star-select-box">
+            <button type="button" class="star-btn active" onclick="setStars(1)">⭐️</button>
+            <button type="button" class="star-btn active" onclick="setStars(2)">⭐️</button>
+            <button type="button" class="star-btn active" onclick="setStars(3)">⭐️</button>
+            <button type="button" class="star-btn active" onclick="setStars(4)">⭐️</button>
+            <button type="button" class="star-btn active" onclick="setStars(5)">⭐️</button>
+          </div>
+
+          <div class="form-group">
+            <input type="text" class="input-field" id="customerName" placeholder="สามารถกรอกชื่อตัวเองได้เลยนะคะ">
+          </div>
+
+          <div class="form-group">
+            <textarea class="textarea-field" id="customerFeedback" rows="3" placeholder="รีวิวร้านเค้าได้ตามความรู้สึกเลยนะคะ ♡"></textarea>
+          </div>
+
+          <button type="button" class="submit-btn" id="submitBtn" onclick="sendReview()">ส่งรีวิว ♡</button>
+        </div>
+      </div>
+
+      <div class="footer-note">thank u for supporting luniecha ♡</div>
+
     </div>
 
-    <!-- Review Section -->
-    <div class="section-card">
-      <div class="section-title">review Liho ♡</div>
+    <!-- 2. แท็บ contact (2 กล่องตามบรีฟเป๊ะๆ) -->
+    <div class="tab-section" id="sec-contact">
       
-      <div class="reviews-list" id="reviewsContainer">
-        <p style="text-align: center; color: var(--text-muted); font-size: 13px;">กำลังโหลดรีวิว...</p>
-      </div>
+      <!-- กล่อง line officials -->
+      <a href="https://lin.ee/SwUd9RB" target="_blank" class="contact-card-link">
+        <div class="contact-title">line officials</div>
+      </a>
 
-      <div style="border-top: 1.5px dashed var(--border-pink); padding-top: 16px;">
-        <div class="star-select-box">
-          <button type="button" class="star-btn active" onclick="setStars(1)">⭐️</button>
-          <button type="button" class="star-btn active" onclick="setStars(2)">⭐️</button>
-          <button type="button" class="star-btn active" onclick="setStars(3)">⭐️</button>
-          <button type="button" class="star-btn active" onclick="setStars(4)">⭐️</button>
-          <button type="button" class="star-btn active" onclick="setStars(5)">⭐️</button>
-        </div>
+      <!-- กล่อง line ( ส่วนตัว ) -->
+      <a href="https://line.me/ti/p/caSKr8HbF6" target="_blank" class="contact-card-link">
+        <div class="contact-title">line ( ส่วนตัว )</div>
+        <div class="contact-sub">ทักมาซ้ำๆนะคะ ข้อความไม่ขึ้น</div>
+      </a>
 
-        <div class="form-group">
-          <input type="text" class="input-field" id="customerName" placeholder="สามารถกรอกชื่อตัวเองได้เลยนะคะ">
-        </div>
-
-        <div class="form-group">
-          <textarea class="textarea-field" id="customerFeedback" rows="3" placeholder="รีวิวร้านเค้าได้ตามความรู้สึกเลยนะคะ ♡"></textarea>
-        </div>
-
-        <button type="button" class="submit-btn" id="submitBtn" onclick="sendReview()">ส่งรีวิว ♡</button>
-      </div>
     </div>
 
-    <div class="footer-note">thank u for supporting liho ♡</div>
   </div>
 
   <!-- Story Viewer Modal -->
@@ -544,6 +658,22 @@ Netflix YouTube Instagram สอบถามได้ค่ะ</p>
       firebase.initializeApp(firebaseConfig);
     }
     const db = firebase.firestore();
+
+    // ฟังก์ชันสลับหน้า Home / contact
+    function switchPage(page) {
+      document.getElementById('btn-home').classList.remove('active');
+      document.getElementById('btn-contact').classList.remove('active');
+      document.getElementById('sec-home').classList.remove('active');
+      document.getElementById('sec-contact').classList.remove('active');
+
+      if (page === 'home') {
+        document.getElementById('btn-home').classList.add('active');
+        document.getElementById('sec-home').classList.add('active');
+      } else {
+        document.getElementById('btn-contact').classList.add('active');
+        document.getElementById('sec-contact').classList.add('active');
+      }
+    }
 
     let currentHighlights = [
       {
@@ -687,7 +817,7 @@ Netflix YouTube Instagram สอบถามได้ค่ะ</p>
       }
     }
 
-    // ดึงเนื้อหาหน้าเว็บ
+    // ดึงเนื้อหาหน้าเว็บจาก luvselris_site
     db.collection("luvselris_site").doc("highlight_content").onSnapshot(doc => {
       if (doc.exists) {
         applySiteData(doc.data());
@@ -696,7 +826,7 @@ Netflix YouTube Instagram สอบถามได้ค่ะ</p>
       }
     });
 
-    // Reviews System: ดึงรีวิวเก่าทั้งหมดแบบ Real-time พร้อม Fallback
+    // Reviews System: ดึงรีวิวเก่าทั้งหมดแบบ Real-time จาก luvselris_reviews
     let currentRating = 5;
     function setStars(star) {
       currentRating = star;
@@ -708,7 +838,6 @@ Netflix YouTube Instagram สอบถามได้ค่ะ</p>
     }
 
     function listenReviews() {
-      // ดึงจากคอลเลกชันรีวิวหลัก
       db.collection("luvselris_reviews")
         .onSnapshot(snapshot => {
           const container = document.getElementById('reviewsContainer');
@@ -786,7 +915,7 @@ Netflix YouTube Instagram สอบถามได้ค่ะ</p>
 
     listenReviews();
 
-    // ระบบปลดล็อกเสียงบน iOS Safari / Chrome Mobile
+    // ปลดล็อกเสียงบน iOS Safari / Chrome Mobile
     const music = document.getElementById('bgMusic');
     function unlockAudio() {
       if (music.paused) music.play().catch(() => {});
